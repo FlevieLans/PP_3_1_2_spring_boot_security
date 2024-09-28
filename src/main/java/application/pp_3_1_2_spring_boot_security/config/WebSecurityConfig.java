@@ -9,15 +9,18 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
 
     private final UserServiceImpl userService; // Внедрение вашего UserService
+    private final AuthenticationSuccessHandler loginSuccessHandler;
 
-    public WebSecurityConfig(UserServiceImpl userService) {
+    public WebSecurityConfig(UserServiceImpl userService, LoginSuccessHandler loginSuccessHandler) {
         this.userService = userService;
+        this.loginSuccessHandler = loginSuccessHandler;
     }
 
     // Конфигурация SecurityFilterChain для обработки безопасности
@@ -32,6 +35,7 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated() // Все остальные требуют аутентификации
                 )
                 .formLogin(form -> form
+                        .successHandler(loginSuccessHandler)
                         .permitAll() // Используем встроенную страницу логина Spring Security
                 )
                 .logout(logout -> logout

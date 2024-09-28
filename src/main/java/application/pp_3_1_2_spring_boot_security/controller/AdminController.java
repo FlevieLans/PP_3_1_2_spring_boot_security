@@ -4,6 +4,8 @@ import application.pp_3_1_2_spring_boot_security.entity.User;
 import application.pp_3_1_2_spring_boot_security.service.UserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class AdminController {
-    //wtf
+
     @Autowired
     private UserServiceImpl userService;
 
@@ -26,6 +28,22 @@ public class AdminController {
     public String showAllUsers(Model model){
         model.addAttribute("allUsers", userService.getAllUsers());
         return "admin";
+    }
+
+
+    @GetMapping("/user")
+    public String getUserInfo(Model model) {
+        // Получение текущего пользователя
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName(); // Получаем имя пользователя (username)
+
+        // Находим пользователя в базе данных по имени
+        User currentUser = (User) userService.loadUserByUsername(currentUsername);
+
+        // Передаем информацию о пользователе в модель
+        model.addAttribute("user", currentUser);
+
+        return "user"; // Имя шаблона Thymeleaf
     }
 
     @PostMapping("/admin")
