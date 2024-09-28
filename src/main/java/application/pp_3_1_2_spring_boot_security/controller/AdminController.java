@@ -30,25 +30,18 @@ public class AdminController {
         return "admin";
     }
 
-
     @GetMapping("/user")
     public String getUserInfo(Model model) {
-        // Получение текущего пользователя
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName(); // Получаем имя пользователя (username)
-
-        // Находим пользователя в базе данных по имени
+        String currentUsername = authentication.getName();
         User currentUser = (User) userService.loadUserByUsername(currentUsername);
-
-        // Передаем информацию о пользователе в модель
         model.addAttribute("user", currentUser);
-
-        return "user"; // Имя шаблона Thymeleaf
+        return "user";
     }
 
     @PostMapping("/admin")
     public String addNewUser(@ModelAttribute("newUser") @Valid User user, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             model.addAttribute("allUsers", userService.getAllUsers());
             return "admin";
         }

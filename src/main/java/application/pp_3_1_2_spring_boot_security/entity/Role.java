@@ -2,7 +2,6 @@ package application.pp_3_1_2_spring_boot_security.entity;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
-
 import java.util.Set;
 
 @Entity
