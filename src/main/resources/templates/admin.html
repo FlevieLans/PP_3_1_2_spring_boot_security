@@ -18,7 +18,6 @@
         <th>Surname</th>
         <th>Age</th>
         <th>Username</th>
-        <th>Password</th>
         <th>Roles</th>
     </tr>
     <tr th:each="user : ${allUsers}">
@@ -27,7 +26,6 @@
         <td th:utext="${user.getSurname()}"></td>
         <td th:utext="${user.getAge()}"></td>
         <td th:utext="${user.getUsername()}"></td>
-        <td th:utext="${user.getPassword()}"></td>
         <td th:utext="${user.getRoles()}"></td>
         <td>
             <form th:method="DELETE" th:action="@{/admin/{id}/delete(id=${user.getId()})}">
@@ -72,8 +70,32 @@
     <br/>
     <input type="submit" value="Add"/>
 </form>
+
+<br/>
+<hr/>
 <br>
-<a href="/logout">Logout</a>
+
+<td>
+    <div style="display: flex; gap: 10px;">
+
+        <form th:action="@{/}" style="margin: 0;">
+            <input type="submit" value="Home">
+        </form>
+        <form th:action="@{/user}" th:if="${#authorization.expression('isAuthenticated()')}" style="margin: 0;">
+            <input type="submit" value="Profile">
+        </form>
+        <form th:action="@{/admin}" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" style="margin: 0;">
+            <input type="submit" value="Admin">
+        </form>
+        <form th:action="@{/logout}" th:if="${#authorization.expression('isAuthenticated()')}" style="margin: 0;">
+            <input type="submit" value="Logout">
+        </form>
+        <form th:action="@{/login}" th:if="${#authorization.expression('!isAuthenticated()')}" style="margin: 0;">
+            <input type="submit" value="Login">
+        </form>
+    </div>
+</td>
+
 
 </body>
 

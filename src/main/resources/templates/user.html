@@ -9,13 +9,36 @@
 <h1>User Information</h1>
 
 <p><strong>ID:</strong> <span th:text="${user.id}"></span></p>
-<p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
-<p><strong>First Name:</strong> <span th:text="${user.name}"></span></p>
-<p><strong>Last Name:</strong> <span th:text="${user.surname}"></span></p>
+<p><strong>Name:</strong> <span th:text="${user.name}"></span></p>
+<p><strong>Surname:</strong> <span th:text="${user.surname}"></span></p>
 <p><strong>Age:</strong> <span th:text="${user.age}"></span></p>
+<p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
 <p><strong>Roles:</strong> <span th:text="${user.roles}"></span></p>
 
-<!-- Добавьте кнопку выхода -->
-<a href="/logout">Logout</a>
+<br/>
+<hr/>
+<br>
+
+<td>
+    <div style="display: flex; gap: 10px;">
+
+        <form th:action="@{/}" style="margin: 0;">
+            <input type="submit" value="Home">
+        </form>
+        <form th:action="@{/user}" th:if="${#authorization.expression('isAuthenticated()')}" style="margin: 0;">
+            <input type="submit" value="Profile">
+        </form>
+        <form th:action="@{/admin}" th:if="${#authorization.expression('hasRole(''ADMIN'')')}" style="margin: 0;">
+            <input type="submit" value="Admin">
+        </form>
+        <form th:action="@{/logout}" th:if="${#authorization.expression('isAuthenticated()')}" style="margin: 0;">
+            <input type="submit" value="Logout">
+        </form>
+        <form th:action="@{/login}" th:if="${#authorization.expression('!isAuthenticated()')}" style="margin: 0;">
+            <input type="submit" value="Login">
+        </form>
+    </div>
+</td>
+
 </body>
 </html>
