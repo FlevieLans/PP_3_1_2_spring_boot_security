@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class AdminController {
 
-    @Autowired
-    private UserServiceImpl userService;
+    private final UserServiceImpl userService;
+
+    public AdminController(UserServiceImpl userService) { this.userService = userService; }
 
 
     @ModelAttribute("newUser")
     public User getPerson() { return new User(); }
-
 
     @GetMapping("/admin")
     public String showAllUsers(Model model){

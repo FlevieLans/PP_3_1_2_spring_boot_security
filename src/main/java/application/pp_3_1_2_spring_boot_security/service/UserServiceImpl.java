@@ -2,9 +2,7 @@ package application.pp_3_1_2_spring_boot_security.service;
 
 import application.pp_3_1_2_spring_boot_security.entity.Role;
 import application.pp_3_1_2_spring_boot_security.entity.User;
-import application.pp_3_1_2_spring_boot_security.repository.RoleRepository;
 import application.pp_3_1_2_spring_boot_security.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,14 +14,8 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserDetailsService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    RoleRepository roleRepository;
-
-
-    @Autowired
     public UserServiceImpl(UserRepository userRepository) { this.userRepository = userRepository; }
 
 
@@ -55,7 +47,6 @@ public class UserServiceImpl implements UserDetailsService {
         }
         return false;
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
