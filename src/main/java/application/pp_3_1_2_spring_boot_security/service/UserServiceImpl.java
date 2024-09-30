@@ -4,7 +4,6 @@ import application.pp_3_1_2_spring_boot_security.entity.Role;
 import application.pp_3_1_2_spring_boot_security.entity.User;
 import application.pp_3_1_2_spring_boot_security.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
@@ -12,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserDetailsService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 

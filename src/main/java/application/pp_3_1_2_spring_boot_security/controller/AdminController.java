@@ -1,11 +1,8 @@
 package application.pp_3_1_2_spring_boot_security.controller;
 
 import application.pp_3_1_2_spring_boot_security.entity.User;
-import application.pp_3_1_2_spring_boot_security.service.UserServiceImpl;
+import application.pp_3_1_2_spring_boot_security.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,9 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class AdminController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
-    public AdminController(UserServiceImpl userService) { this.userService = userService; }
+    public AdminController(UserService userService) { this.userService = userService; }
 
 
     @ModelAttribute("newUser")
@@ -28,15 +25,6 @@ public class AdminController {
     public String showAllUsers(Model model){
         model.addAttribute("allUsers", userService.getAllUsers());
         return "admin";
-    }
-
-    @GetMapping("/user")
-    public String getUserInfo(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUsername = authentication.getName();
-        User currentUser = (User) userService.loadUserByUsername(currentUsername);
-        model.addAttribute("user", currentUser);
-        return "user";
     }
 
     @PostMapping("/admin")
