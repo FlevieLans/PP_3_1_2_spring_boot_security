@@ -3,19 +3,25 @@ package application.pp_3_1_2_spring_boot_security.controller;
 import application.pp_3_1_2_spring_boot_security.entity.User;
 import application.pp_3_1_2_spring_boot_security.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class AdminController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminController(UserService userService) { this.userService = userService; }
+    public AdminController(UserService userService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     @ModelAttribute("newUser")
@@ -50,8 +56,14 @@ public class AdminController {
     }
 
     @PostMapping("admin/{id}")
-    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    public String updateUser(@PathVariable("id") int id, @ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) { return "edit"; }
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        } else {
+            User existingUser = userService.getUser(id);
+            user.setPassword(existingUser.getPassword());
+        }
         userService.updateUser(user);
         return "redirect:/admin";
     }

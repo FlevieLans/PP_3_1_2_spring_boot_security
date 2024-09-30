@@ -5,8 +5,8 @@ import application.pp_3_1_2_spring_boot_security.entity.User;
 import application.pp_3_1_2_spring_boot_security.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +15,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) { this.userRepository = userRepository; }
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     public List<User> getAllUsers() { return userRepository.findAll(); }
@@ -25,7 +29,7 @@ public class UserServiceImpl implements UserService {
         User userFromDB = userRepository.findByUsername(user.getUsername());
         if (userFromDB != null) { return false; }
         user.setRoles(Collections.singleton(new Role(1, "ROLE_USER")));
-        user.setPassword(user.getPassword());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
     }
